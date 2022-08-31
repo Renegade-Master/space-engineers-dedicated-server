@@ -1,43 +1,39 @@
-# SteamCMD Dedicated Server Template
+# Space Engineers Dedicated Server
 
 ## Disclaimer
 
 **Note:** This image is not officially supported by Valve.
 
 If issues are encountered, please report them on
-the [GitHub repository](https://github.com/Renegade-Master/steamcmd-dedicated-server-template/issues/new/choose)
+the [GitHub repository](https://github.com/Renegade-Master/space-engineers-dedicated-server/issues/new/choose)
 
 ## Badges
 
-[![Build and Test Server Image](https://github.com/Renegade-Master/steamcmd-dedicated-server-template/actions/workflows/docker-build.yml/badge.svg?branch=main)](https://github.com/Renegade-Master/steamcmd-dedicated-server-template/actions/workflows/docker-build.yml)
-[![Docker Repository on Quay](https://quay.io/repository/renegade_master/steamcmd-dedicated-server-template/status "Docker Repository on Quay")](https://quay.io/repository/renegade_master/steamcmd-dedicated-server-template)
+[![Build and Test Server Image](https://github.com/Renegade-Master/space-engineers-dedicated-server/actions/workflows/docker-build.yml/badge.svg?branch=main)](https://github.com/Renegade-Master/space-engineers-dedicated-server/actions/workflows/docker-build.yml)
+[![Docker Repository on Quay](https://quay.io/repository/renegade_master/space-engineers-dedicated-server/status "Docker Repository on Quay")](https://quay.io/repository/renegade_master/space-engineers-dedicated-server)
 
-![Docker Image Version (latest by date)](https://img.shields.io/docker/v/renegademaster/steamcmd-dedicated-server-template?label=Latest%20Version)
-![Docker Image Size (latest by date)](https://img.shields.io/docker/image-size/renegademaster/steamcmd-dedicated-server-template?label=Image%20Size)
-![DockerHub Pulls](https://img.shields.io/docker/pulls/renegademaster/steamcmd-dedicated-server-template?label=DockerHub%20Pull%20Count)
+![Docker Image Version (latest by date)](https://img.shields.io/docker/v/renegademaster/space-engineers-dedicated-server?label=Latest%20Version)
+![Docker Image Size (latest by date)](https://img.shields.io/docker/image-size/renegademaster/space-engineers-dedicated-server?label=Image%20Size)
+![DockerHub Pulls](https://img.shields.io/docker/pulls/renegademaster/space-engineers-dedicated-server?label=DockerHub%20Pull%20Count)
 
 ## Description
 
 Template for creating SteamCMD Dedicated Servers using Docker, and optionally Docker-Compose.  
-Built almost from scratch to be the smallest SteamCMD Dedicated Server around!
-
-This template was constructed based on
-the [Steamcmd Dedicated Server Template](https://github.com/Renegade-Master/steamcmd-dedicated-server-template)
-image, and there may be some holdovers specific to that implementation.
+Built almost from scratch to be the smallest Space Engineers Dedicated Server around!
 
 ## Links
 
 ### Source:
 
-- [GitHub Repository](https://github.com/Renegade-Master/steamcmd-dedicated-server-template)
+- [GitHub Repository](https://github.com/Renegade-Master/space-engineers-dedicated-server)
 
 ### Images:
 
-| Provider                                                                                                                                   | Image                                                         | Pull Command                                                                                                                                                         |
-|--------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [GitHub Packages](https://github.com/Renegade-Master/steamcmd-dedicated-server-template/pkgs/container/steamcmd-dedicated-server-template) | `ghcr.io/renegade-master/steamcmd-dedicated-server-template`  | `docker pull ghcr.io/renegade-master/steamcmd-dedicated-server-template:x.y.z`<br/>`docker pull ghcr.io/renegade-master/steamcmd-dedicated-server-template:latest`   |
-| [DockerHub](https://hub.docker.com/r/renegademaster/steamcmd-dedicated-server-template)                                                    | `docker.io/renegademaster/steamcmd-dedicated-server-template` | `docker pull docker.io/renegademaster/steamcmd-dedicated-server-template:x.y.z`<br/>`docker pull docker.io/renegademaster/steamcmd-dedicated-server-template:latest` |
-| [Red Hat Quay](https://quay.io/repository/renegade_master/steamcmd-dedicated-server-template)                                              | `quay.io/renegade_master/steamcmd-dedicated-server-template`  | `docker pull quay.io/renegade_master/steamcmd-dedicated-server-template:x.y.z`<br/>`docker pull quay.io/renegade_master/steamcmd-dedicated-server-template:latest`   |
+| Provider                                                                                                                               | Image                                                       | Pull Command                                                                                                                                                     |
+|----------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [GitHub Packages](https://github.com/Renegade-Master/space-engineers-dedicated-server/pkgs/container/space-engineers-dedicated-server) | `ghcr.io/renegade-master/space-engineers-dedicated-server`  | `docker pull ghcr.io/renegade-master/space-engineers-dedicated-server:x.y.z`<br/>`docker pull ghcr.io/renegade-master/space-engineers-dedicated-server:latest`   |
+| [DockerHub](https://hub.docker.com/r/renegademaster/space-engineers-dedicated-server)                                                  | `docker.io/renegademaster/space-engineers-dedicated-server` | `docker pull docker.io/renegademaster/space-engineers-dedicated-server:x.y.z`<br/>`docker pull docker.io/renegademaster/space-engineers-dedicated-server:latest` |
+| [Red Hat Quay](https://quay.io/repository/renegade_master/space-engineers-dedicated-server)                                            | `quay.io/renegade_master/space-engineers-dedicated-server`  | `docker pull quay.io/renegade_master/space-engineers-dedicated-server:x.y.z`<br/>`docker pull quay.io/renegade_master/space-engineers-dedicated-server:latest`   |
 
 ### External Resources:
 
@@ -77,16 +73,16 @@ The following are instructions for running the server using the Docker image.
     - Pull the image from DockerHub:
 
       ```shell
-      docker pull renegademaster/steamcmd-dedicated-server-template:<tagname>
+      docker pull renegademaster/space-engineers-dedicated-server:<tagname>
       ```
 
     - Or alternatively, build the image:
 
        ```shell
-       git clone https://github.com/Renegade-Master/steamcmd-dedicated-server-template.git \
-           && cd steamcmd-dedicated-server-template
-  
-       docker build -t docker.io/renegademaster/steamcmd-dedicated-server-template:<tag> -f docker/steamcmd-dedicated-server-template.Dockerfile .
+       git clone https://github.com/Renegade-Master/space-engineers-dedicated-server.git \
+           && cd space-engineers-dedicated-server
+
+       docker build -t docker.io/renegademaster/space-engineers-dedicated-server:<tag> -f docker/space-engineers-dedicated-server.Dockerfile .
        ```
 
 2. Run the container:
@@ -115,7 +111,7 @@ The following are instructions for running the server using the Docker image.
        [--env=RCON_PORT=<value>] \
        [--env=SERVER_NAME=<value>] \
        [--env=SERVER_PASSWORD=<value>] \
-       docker.io/renegademaster/steamcmd-dedicated-server-template[:<tagname>]
+       docker.io/renegademaster/space-engineers-dedicated-server[:<tagname>]
    ```
 
 3. Optionally, reattach the terminal to the log output (***Note**: this is not an Interactive Terminal*)
@@ -133,8 +129,8 @@ The following are instructions for running the server using Docker-Compose.
 1. Download the repository:
 
    ```shell
-   git clone https://github.com/Renegade-Master/steamcmd-dedicated-server-template.git \
-       && cd steamcmd-dedicated-server-template
+   git clone https://github.com/Renegade-Master/space-engineers-dedicated-server.git \
+       && cd space-engineers-dedicated-server
    ```
 
 2. Make any configuration changes you want to in the `docker-compose.yaml` file. In

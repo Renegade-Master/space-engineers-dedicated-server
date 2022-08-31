@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# SteamCMD Dedicated Server Template Docker Image.
+# Space Engineers Dedicated Server Docker Image.
 # Copyright (C) 2022-2022 Renegade-Master [renegade.master.dev@protonmail.com]
 #
 # This program is free software: you can redistribute it and/or modify
@@ -37,6 +37,7 @@ function start_server() {
         -servername "$SERVER_NAME"
 }
 
+
 function apply_postinstall_config() {
     printf "\n### Applying Post Install Configuration...\n"
 
@@ -64,6 +65,7 @@ function apply_postinstall_config() {
     printf "\n### Post Install Configuration applied.\n"
 }
 
+
 # Test if this is the the first time the server has run
 function test_first_run() {
     printf "\n### Checking if this is the first run...\n"
@@ -80,6 +82,7 @@ function test_first_run() {
     printf "\n### First run check complete.\n"
 }
 
+
 # Update the server
 function update_server() {
     printf "\n### Updating Generic SteamCMD Server...\n"
@@ -95,7 +98,7 @@ function update_server() {
         exec 3>&1
 
         # Attempt to update the server
-        steam_output=$("$STEAM_PATH" +runscript "$STEAM_INSTALL_FILE" | tee /dev/fd/3)
+        steam_output=$(steamcmd.sh +runscript "$STEAM_INSTALL_FILE" | tee /dev/fd/3)
 
         # Close the File Descriptor
         exec 3>&-
@@ -117,6 +120,7 @@ function update_server() {
     printf "\n### Generic SteamCMD Server updated.\n"
 }
 
+
 # Apply user configuration to the server
 function apply_preinstall_config() {
     printf "\n### Applying Pre Install Configuration...\n"
@@ -127,6 +131,7 @@ function apply_preinstall_config() {
     printf "\n### Pre Install Configuration applied.\n"
 }
 
+
 # Change the folder permissions for install and save directory
 function update_folder_permissions() {
     printf "\n### Updating Folder Permissions...\n"
@@ -136,6 +141,7 @@ function update_folder_permissions() {
 
     printf "\n### Folder Permissions updated.\n"
 }
+
 
 # Set variables for use in the script
 function set_variables() {
@@ -187,11 +193,12 @@ function set_variables() {
     SERVER_RULES_CONFIG="$CONFIG_DIR/Server/GameRules.ini"
 }
 
+
 ## Main
 set_variables
-update_folder_permissions
+#update_folder_permissions
 apply_preinstall_config
 update_server
-test_first_run
-apply_postinstall_config
-start_server
+#test_first_run
+#apply_postinstall_config
+#start_server

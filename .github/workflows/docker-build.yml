@@ -1,4 +1,4 @@
-# SteamCMD Dedicated Server Template Docker Image.
+# Space Engineers Dedicated Server Docker Image.
 # Copyright (C) 2022-2022 Renegade-Master [renegade.master.dev@protonmail.com]
 #
 # This program is free software: you can redistribute it and/or modify
@@ -17,11 +17,11 @@
 
 name: Build and Test Server Image
 
-#on:
-#  push:
-#    branches: [ main ]
-#  pull_request:
-#    branches: [ main ]
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 defaults:
   run:
@@ -30,7 +30,7 @@ defaults:
 # Set some Environment Variables for image specific properties
 env:
   IMAGE_NAMESPACE: renegademaster
-  IMAGE_NAME: steamcmd-dedicated-server-template
+  IMAGE_NAME: space-engineers-dedicated-server
   CONTAINER_NAME: dedicated-server
   INSTALL_DIR: REPLACE_ME_INSTALL
   CONFIG_DIR: REPLACE_ME_CONFIG
@@ -66,7 +66,7 @@ jobs:
       if: ${{ success() && matrix.system == 'docker' }}
       run: |
         docker build \
-        --file docker/${IMAGE_NAME}.Dockerfile \
+        --file image/${IMAGE_NAME}.Dockerfile \
         --tag docker.io/${IMAGE_NAMESPACE}/${IMAGE_NAME}:${{ steps.variables.outputs.datetime }} \
         .
 
@@ -138,7 +138,7 @@ jobs:
       if: ${{ success() && matrix.system == 'podman' }}
       run: |
         BUILDAH_LAYERS=true buildah bud \
-        --file docker/${IMAGE_NAME}.Dockerfile \
+        --file image/${IMAGE_NAME}.Dockerfile \
         --tag docker.io/${IMAGE_NAMESPACE}/${IMAGE_NAME}:${{ steps.variables.outputs.datetime }} \
         .
 

@@ -1,4 +1,4 @@
-# SteamCMD Dedicated Server Template Docker Image.
+# Space Engineers Dedicated Server Docker Image.
 # Copyright (C) 2022-2022 Renegade-Master [renegade.master.dev@protonmail.com]
 #
 # This program is free software: you can redistribute it and/or modify
@@ -28,9 +28,9 @@ ARG BASE_IMAGE="docker.io/renegademaster/steamcmd-minimal:1.1.2"
 FROM ${BASE_IMAGE}
 
 # Add metadata labels
-LABEL com.renegademaster.steamcmd-dedicated-server-template.authors="Renegade-Master" \
-    com.renegademaster.steamcmd-dedicated-server-template.source-repository="https://github.com/Renegade-Master/steamcmd-dedicated-server-template" \
-    com.renegademaster.steamcmd-dedicated-server-template.image-repository="https://hub.docker.com/renegademaster/steamcmd-dedicated-server-template"
+LABEL com.renegademaster.space-engineers-dedicated-server.authors="Renegade-Master" \
+    com.renegademaster.space-engineers-dedicated-server.source-repository="https://github.com/Renegade-Master/space-engineers-dedicated-server" \
+    com.renegademaster.space-engineers-dedicated-server.image-repository="https://hub.docker.com/renegademaster/space-engineers-dedicated-server"
 
 # Copy the source files
 COPY src /home/steam/
