@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# SteamCMD Dedicated Server Template Docker Image.
+# Space Engineers Dedicated Server Docker Image.
 # Copyright (C) 2022-2022 Renegade-Master [renegade.master.dev@protonmail.com]
 #
 # This program is free software: you can redistribute it and/or modify
@@ -19,7 +19,7 @@
 
 #######################################################################
 #   Author: Renegade-Master
-#   Description: Install, update, and start a Generic SteamCMD Dedicated
+#   Description: Install, update, and start a Space Engineers Dedicated
 #     Server instance.
 #   License: GNU General Public License v3.0 (see LICENSE)
 #######################################################################
@@ -29,13 +29,14 @@ set +x -u -o pipefail
 
 # Start the Server
 function start_server() {
-    printf "\n### Starting Generic SteamCMD Server...\n"
+    printf "\n### Starting Space Engineers Server...\n"
     timeout "$TIMEOUT" "$BASE_GAME_DIR"/start-server.sh \
         -adminusername "$ADMIN_USERNAME" \
         -adminpassword "$ADMIN_PASSWORD" \
         -ip "$BIND_IP" -port "$QUERY_PORT" \
         -servername "$SERVER_NAME"
 }
+
 
 function apply_postinstall_config() {
     printf "\n### Applying Post Install Configuration...\n"
@@ -64,6 +65,7 @@ function apply_postinstall_config() {
     printf "\n### Post Install Configuration applied.\n"
 }
 
+
 # Test if this is the the first time the server has run
 function test_first_run() {
     printf "\n### Checking if this is the first run...\n"
@@ -80,42 +82,46 @@ function test_first_run() {
     printf "\n### First run check complete.\n"
 }
 
+
 # Update the server
 function update_server() {
-    printf "\n### Updating Generic SteamCMD Server...\n"
+    printf "\n### Updating Space Engineers Server...\n"
 
     install_success=1
     retries=0
 
     # Try at most MAX_RETRIES times to install the server
     while [[ "$install_success" -ne 0 ]] && [[ "$retries" -lt "$MAX_RETRIES" ]]; do
-        printf "\n### Attempt %s to update Generic SteamCMD Server...\n" "$((retries + 1))"
+        printf "\n### Attempt %s to update Space Engineers Server...\n" "$((retries + 1))"
 
         # Redirect subshell output to STDOUT using a File Descriptor
         exec 3>&1
 
         # Attempt to update the server
-        steam_output=$("$STEAM_PATH" +runscript "$STEAM_INSTALL_FILE" | tee /dev/fd/3)
+        steam_output=$(steamcmd.sh +runscript "$STEAM_INSTALL_FILE" | tee /dev/fd/3)
 
         # Close the File Descriptor
         exec 3>&-
 
+        install_success=0
+
         # Check if the update was successful
-        if [[ $steam_output == *"<placeholder_initialisation_text>"* ]]; then
-            install_success=0
-        else
-            retries=$((retries + 1))
-        fi
+#        if [[ $steam_output == *"<placeholder_initialisation_text>"* ]]; then
+#            install_success=0
+#        else
+#            retries=$((retries + 1))
+#        fi
     done
 
     # Exit is the installation was unsuccessful
     if [[ "$install_success" -ne 0 ]]; then
-        printf "\n### Failed to update Generic SteamCMD Server.\n"
+        printf "\n### Failed to update Space Engineers Server.\n"
         exit 1
     fi
 
-    printf "\n### Generic SteamCMD Server updated.\n"
+    printf "\n### Space Engineers Server updated.\n"
 }
+
 
 # Apply user configuration to the server
 function apply_preinstall_config() {
@@ -127,15 +133,6 @@ function apply_preinstall_config() {
     printf "\n### Pre Install Configuration applied.\n"
 }
 
-# Change the folder permissions for install and save directory
-function update_folder_permissions() {
-    printf "\n### Updating Folder Permissions...\n"
-
-    chown -R "$(id -u):$(id -g)" "$BASE_GAME_DIR"
-    chown -R "$(id -u):$(id -g)" "$CONFIG_DIR"
-
-    printf "\n### Folder Permissions updated.\n"
-}
 
 # Set variables for use in the script
 function set_variables() {
@@ -144,7 +141,7 @@ function set_variables() {
     TIMEOUT="60"
     MAX_RETRIES="5"
     STEAM_INSTALL_FILE="/home/steam/install_server.scmd"
-    BASE_GAME_DIR="/home/steam/REPLACE_ME_INSTALL"
+    BASE_GAME_DIR="/home/steam/se_install"
     CONFIG_DIR="/home/steam/REPLACE_ME_CONFIG"
 
     # Set the Server Admin Password variable
@@ -187,11 +184,11 @@ function set_variables() {
     SERVER_RULES_CONFIG="$CONFIG_DIR/Server/GameRules.ini"
 }
 
+
 ## Main
 set_variables
-update_folder_permissions
 apply_preinstall_config
 update_server
-test_first_run
-apply_postinstall_config
-start_server
+#test_first_run
+#apply_postinstall_config
+#start_server
