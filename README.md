@@ -91,10 +91,10 @@ The following are instructions for running the server using the Docker image.
    `published` ports below must also be changed*
 
    ```shell
-   mkdir REPLACE_ME_CONFIG REPLACE_ME_INSTALL
+   mkdir REPLACE_ME_CONFIG se_install
 
    docker run --detach \
-       --mount type=bind,source="$(pwd)/REPLACE_ME_INSTALL",target=/home/steam/REPLACE_ME_INSTALL \
+       --mount type=bind,source="$(pwd)/se_install",target=/home/steam/se_install \
        --mount type=bind,source="$(pwd)/REPLACE_ME_CONFIG",target=/home/steam/REPLACE_ME_CONFIG \
        --publish 16261:16261/udp --publish 8766:8766/udp \
        --name dedicated-server \
@@ -143,7 +143,7 @@ The following are instructions for running the server using Docker-Compose.
     - Make the data and configuration directories:
 
       ```shell
-      mkdir REPLACE_ME_CONFIG REPLACE_ME_INSTALL
+      mkdir REPLACE_ME_CONFIG se_install
       ```
 
     - Pull the image from DockerHub:

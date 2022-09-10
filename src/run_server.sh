@@ -19,7 +19,7 @@
 
 #######################################################################
 #   Author: Renegade-Master
-#   Description: Install, update, and start a Generic SteamCMD Dedicated
+#   Description: Install, update, and start a Space Engineers Dedicated
 #     Server instance.
 #   License: GNU General Public License v3.0 (see LICENSE)
 #######################################################################
@@ -29,7 +29,7 @@ set +x -u -o pipefail
 
 # Start the Server
 function start_server() {
-    printf "\n### Starting Generic SteamCMD Server...\n"
+    printf "\n### Starting Space Engineers Server...\n"
     timeout "$TIMEOUT" "$BASE_GAME_DIR"/start-server.sh \
         -adminusername "$ADMIN_USERNAME" \
         -adminpassword "$ADMIN_PASSWORD" \
@@ -85,14 +85,14 @@ function test_first_run() {
 
 # Update the server
 function update_server() {
-    printf "\n### Updating Generic SteamCMD Server...\n"
+    printf "\n### Updating Space Engineers Server...\n"
 
     install_success=1
     retries=0
 
     # Try at most MAX_RETRIES times to install the server
     while [[ "$install_success" -ne 0 ]] && [[ "$retries" -lt "$MAX_RETRIES" ]]; do
-        printf "\n### Attempt %s to update Generic SteamCMD Server...\n" "$((retries + 1))"
+        printf "\n### Attempt %s to update Space Engineers Server...\n" "$((retries + 1))"
 
         # Redirect subshell output to STDOUT using a File Descriptor
         exec 3>&1
@@ -103,21 +103,23 @@ function update_server() {
         # Close the File Descriptor
         exec 3>&-
 
+        install_success=0
+
         # Check if the update was successful
-        if [[ $steam_output == *"<placeholder_initialisation_text>"* ]]; then
-            install_success=0
-        else
-            retries=$((retries + 1))
-        fi
+#        if [[ $steam_output == *"<placeholder_initialisation_text>"* ]]; then
+#            install_success=0
+#        else
+#            retries=$((retries + 1))
+#        fi
     done
 
     # Exit is the installation was unsuccessful
     if [[ "$install_success" -ne 0 ]]; then
-        printf "\n### Failed to update Generic SteamCMD Server.\n"
+        printf "\n### Failed to update Space Engineers Server.\n"
         exit 1
     fi
 
-    printf "\n### Generic SteamCMD Server updated.\n"
+    printf "\n### Space Engineers Server updated.\n"
 }
 
 
@@ -132,17 +134,6 @@ function apply_preinstall_config() {
 }
 
 
-# Change the folder permissions for install and save directory
-function update_folder_permissions() {
-    printf "\n### Updating Folder Permissions...\n"
-
-    chown -R "$(id -u):$(id -g)" "$BASE_GAME_DIR"
-    chown -R "$(id -u):$(id -g)" "$CONFIG_DIR"
-
-    printf "\n### Folder Permissions updated.\n"
-}
-
-
 # Set variables for use in the script
 function set_variables() {
     printf "\n### Setting variables...\n"
@@ -150,7 +141,7 @@ function set_variables() {
     TIMEOUT="60"
     MAX_RETRIES="5"
     STEAM_INSTALL_FILE="/home/steam/install_server.scmd"
-    BASE_GAME_DIR="/home/steam/REPLACE_ME_INSTALL"
+    BASE_GAME_DIR="/home/steam/se_install"
     CONFIG_DIR="/home/steam/REPLACE_ME_CONFIG"
 
     # Set the Server Admin Password variable
@@ -196,7 +187,6 @@ function set_variables() {
 
 ## Main
 set_variables
-#update_folder_permissions
 apply_preinstall_config
 update_server
 #test_first_run

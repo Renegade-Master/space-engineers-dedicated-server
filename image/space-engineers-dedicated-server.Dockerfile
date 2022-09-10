@@ -17,7 +17,7 @@
 
 #######################################################################
 #   Author: Renegade-Master
-#   Description: Base image for running a Generic SteamCMD Dedicated
+#   Description: Base image for running a Space Engineers Dedicated
 #       Server instance.
 #   License: GNU General Public License v3.0 (see LICENSE)
 #######################################################################

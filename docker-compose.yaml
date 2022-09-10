@@ -44,5 +44,5 @@ services:
       published: 8766
       protocol: udp
     volumes:
-    - ./REPLACE_ME_INSTALL:/home/steam/REPLACE_ME_INSTALL
+    - ./se_install:/home/steam/se_install
     - ./REPLACE_ME_CONFIG:/home/steam/REPLACE_ME_CONFIG

@@ -32,7 +32,7 @@ env:
   IMAGE_NAMESPACE: renegademaster
   IMAGE_NAME: space-engineers-dedicated-server
   CONTAINER_NAME: dedicated-server
-  INSTALL_DIR: REPLACE_ME_INSTALL
+  INSTALL_DIR: se_install
   CONFIG_DIR: REPLACE_ME_CONFIG
 
 jobs:
