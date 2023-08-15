@@ -85,4 +85,6 @@ COPY --from=INSTALL_STEAM_DEPS /tmp/packages/ /
 COPY --from=INSTALL_STEAM /tmp/packages/ ${STEAMDIR}
 COPY --from=GO_BUILD /tmp/packages/build/ /usr/local/bin/
 
+COPY src/install_server.scmd /app/
+
 ENTRYPOINT [ "run_server" ]
