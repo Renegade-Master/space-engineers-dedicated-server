@@ -82,7 +82,7 @@ The following are instructions for running the server using the Docker image.
        git clone https://github.com/Renegade-Master/space-engineers-dedicated-server.git \
            && cd space-engineers-dedicated-server
 
-       docker build -t docker.io/renegademaster/space-engineers-dedicated-server:<tag> -f docker/space-engineers-dedicated-server.Dockerfile .
+       docker build -t docker.io/renegademaster/space-engineers-dedicated-server:<tag> -f docker/space-engineers-dedicated-server.Containerfile .
        ```
 
 2. Run the container:
