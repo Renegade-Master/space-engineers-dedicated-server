@@ -85,4 +85,4 @@ COPY --from=INSTALL_STEAM_DEPS /tmp/packages/ /
 COPY --from=INSTALL_STEAM /tmp/packages/ ${STEAMDIR}
 COPY --from=GO_BUILD /tmp/packages/build/ /usr/local/bin/
 
-ENTRYPOINT [ "steamcmd.sh", "--help" ]
+ENTRYPOINT [ "run_server" ]
