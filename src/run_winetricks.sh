@@ -33,7 +33,6 @@ Xvfb :5 -screen 0 1024x768x16 &
 wineboot --init /nogui
 
 ./winetricks corefonts
-./winetricks -q vcrun2017
-./winetricks -q vcrun2013
+./winetricks -q vcrun2019
 ./winetricks -q --force dotnet48
 ./winetricks sound=disabled
