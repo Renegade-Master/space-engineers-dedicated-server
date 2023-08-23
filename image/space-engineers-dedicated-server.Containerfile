@@ -48,24 +48,24 @@ FROM ${BASE_IMAGE} AS INSTALL_WINETRICKS
 ARG INSTALL_DIR
 ARG WINEPREFIX
 
-ENV WINEARCH="win64"
-ENV WINEPREFIX="$WINEPREFIX"
-
 WORKDIR ${INSTALL_DIR}
 
 RUN dnf install --assumeyes \
-      wget cabextract
+      wget cabextract xorg-x11-server-Xvfb
 
 RUN wget https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks \
     && chmod +x winetricks
 
 COPY --from=INSTALL_WINE $INSTALL_DIR/ /
+COPY src/run_winetricks.sh .
+
+ENV DISPLAY=":5.0"
+ENV WINEARCH="win64"
+ENV WINEDLLOVERRIDES="mscoree=d"
+ENV WINEPREFIX="$WINEPREFIX"
 
 # Apply Winetricks
-RUN ./winetricks -q vcrun2017
-RUN ./winetricks -q vcrun2013
-RUN ./winetricks -q --force dotnet48
-RUN ./winetricks sound=disabled
+RUN ./run_winetricks.sh
 
 FROM ${BASE_IMAGE} AS INSTALL_STEAM_DEPS
 ARG BASE_IMAGE_VERSION
@@ -92,10 +92,11 @@ ARG INSTALL_DIR
 WORKDIR ${INSTALL_DIR}
 
 COPY src/run_server.go .
+COPY src/util_server.go .
 
 RUN go build \
         -o build/ \
-        run_server.go
+        run_server.go util_server.go
 
 FROM scratch AS RUNTIME
 ARG INSTALL_DIR

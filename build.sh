@@ -5,7 +5,7 @@ set +x -u -o pipefail
 
 build() {
   pwd=$(pwd)
-  src="${pwd}/src/run_server.go"
+  src="${pwd}/src/run_server.go ${pwd}/src/util_server.go"
   output_dir="${pwd}/build/"
 
   printf "Building source files: [%s]\n" "${src}"
