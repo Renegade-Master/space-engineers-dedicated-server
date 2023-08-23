@@ -30,10 +30,12 @@ ARG GO_IMAGE_PATH="docker.io/golang"
 ARG GO_IMAGE_VERSION="1.21.0"
 ARG GO_IMAGE="${GO_IMAGE_PATH}:${GO_IMAGE_VERSION}"
 
+ARG INSTALL_DIR="/tmp/packages/"
+ARG WINEPREFIX="/usr/local/wineprefix/"
+
 FROM ${BASE_IMAGE} AS INSTALL_WINE
 ARG BASE_IMAGE_VERSION
-
-ARG INSTALL_DIR="/tmp/packages/"
+ARG INSTALL_DIR
 
 RUN dnf install --assumeyes 'dnf-command(config-manager)'
 RUN dnf config-manager \
@@ -42,17 +44,38 @@ RUN dnf config-manager \
 RUN dnf install --assumeyes --releasever ${BASE_IMAGE_VERSION} --installroot "${INSTALL_DIR}" \
     filesystem bash winehq-stable
 
+FROM ${BASE_IMAGE} AS INSTALL_WINETRICKS
+ARG INSTALL_DIR
+ARG WINEPREFIX
+
+ENV WINEARCH="win64"
+ENV WINEPREFIX="$WINEPREFIX"
+
+WORKDIR ${INSTALL_DIR}
+
+RUN dnf install --assumeyes \
+      wget cabextract
+
+RUN wget https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks \
+    && chmod +x winetricks
+
+COPY --from=INSTALL_WINE $INSTALL_DIR/ /
+
+# Apply Winetricks
+RUN ./winetricks -q vcrun2017
+RUN ./winetricks -q vcrun2013
+RUN ./winetricks -q --force dotnet48
+RUN ./winetricks sound=disabled
+
 FROM ${BASE_IMAGE} AS INSTALL_STEAM_DEPS
 ARG BASE_IMAGE_VERSION
-
-ARG INSTALL_DIR="/tmp/packages/"
+ARG INSTALL_DIR
 
 RUN dnf install --assumeyes --releasever ${BASE_IMAGE_VERSION} --installroot "${INSTALL_DIR}" \
      glibc.i686 libstdc++.i686
 
 FROM ${BASE_IMAGE} AS INSTALL_STEAM
-
-ARG INSTALL_DIR="/tmp/packages/"
+ARG INSTALL_DIR
 
 WORKDIR ${INSTALL_DIR}
 
@@ -64,8 +87,7 @@ RUN wget "https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz
     && rm steamcmd_linux.tar.gz
 
 FROM ${GO_IMAGE} AS GO_BUILD
-
-ARG INSTALL_DIR="/tmp/packages/"
+ARG INSTALL_DIR
 
 WORKDIR ${INSTALL_DIR}
 
@@ -76,14 +98,21 @@ RUN go build \
         run_server.go
 
 FROM scratch AS RUNTIME
+ARG INSTALL_DIR
+ARG WINEPREFIX
 
-ENV STEAMDIR="/usr/local/games"
-ENV PATH="$STEAMDIR:$PATH"
+ENV STEAM_DIR="/usr/local/games"
+ENV WINTRICKS_DIR="/usr/local/winetricks"
+ENV PATH="$STEAM_DIR:$WINTRICKS_DIR:$PATH"
 
-COPY --from=INSTALL_WINE /tmp/packages/ /
-COPY --from=INSTALL_STEAM_DEPS /tmp/packages/ /
-COPY --from=INSTALL_STEAM /tmp/packages/ ${STEAMDIR}
-COPY --from=GO_BUILD /tmp/packages/build/ /usr/local/bin/
+ENV WINEARCH="win64"
+ENV WINEPREFIX="$WINEPREFIX"
+
+COPY --from=INSTALL_WINE       $INSTALL_DIR/       /
+COPY --from=INSTALL_WINETRICKS $WINEPREFIX/        ${WINEPREFIX}
+COPY --from=INSTALL_STEAM_DEPS $INSTALL_DIR/       /
+COPY --from=INSTALL_STEAM      $INSTALL_DIR/       ${STEAM_DIR}
+COPY --from=GO_BUILD           $INSTALL_DIR/build/ /usr/local/bin/
 
 COPY src/install_server.scmd /app/
 

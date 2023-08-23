@@ -1,4 +1,5 @@
 build/
+se_install/
 
 # Created by https://www.toptal.com/developers/gitignore/api/go,goland+iml,intellij+iml,visualstudiocode
 # Edit at https://www.toptal.com/developers/gitignore?templates=go,goland+iml,intellij+iml,visualstudiocode
