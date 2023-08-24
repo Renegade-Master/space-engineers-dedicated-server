@@ -54,7 +54,8 @@ Container:
 You must have the following software available on the host selected to run this
 Container:
 
-* Podman or Docker
+* [Podman](https://podman.io/docs/installation)
+  or [Docker](https://docs.docker.com/engine/install/)
 
 **_Note_**: Podman and Docker can be used interchangeably for this image. I will
 use Podman for the commands here, but they are the exact same for Docker. Simply
