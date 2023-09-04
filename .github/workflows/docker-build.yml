@@ -32,8 +32,8 @@ defaults:
 env:
   IMAGE_NAMESPACE: renegademaster
   IMAGE_NAME: space-engineers-dedicated-server
-  CONTAINER_NAME: dedicated-server
-  INSTALL_DIR: se_install
+  CONTAINER_NAME: se-dedicated-server
+  INSTALL_DIR: SpaceEngineers
   CONFIG_DIR: REPLACE_ME_CONFIG
 
 jobs:
@@ -67,7 +67,7 @@ jobs:
       if: ${{ success() && matrix.system == 'docker' }}
       run: |
         docker build \
-        --file image/${IMAGE_NAME}.Dockerfile \
+        --file image/${IMAGE_NAME}.Containerfile \
         --tag docker.io/${IMAGE_NAMESPACE}/${IMAGE_NAME}:${{ steps.variables.outputs.datetime }} \
         .
 
@@ -85,8 +85,8 @@ jobs:
         docker run \
           --rm \
           --name ${CONTAINER_NAME} \
-          --mount type=bind,source="$(pwd)/${INSTALL_DIR}",target=/home/steam/${INSTALL_DIR} \
-          --mount type=bind,source="$(pwd)/${CONFIG_DIR}",target=/home/steam/${CONFIG_DIR} \
+          --mount type=bind,source="$(pwd)/${INSTALL_DIR}",target=/usr/local/wineprefix/drive_c/Program Files/Steam/steamapps/common/${INSTALL_DIR} \
+          --mount type=bind,source="$(pwd)/${CONFIG_DIR}",target=/usr/local/wineprefix/drive_c/Program Files/Steam/steamapps/common/${CONFIG_DIR} \
           --env=GAME_PORT="25496" \
           --env=MAX_PLAYERS="14" \
           --env=MAX_RAM="6144m" \
@@ -139,7 +139,7 @@ jobs:
       if: ${{ success() && matrix.system == 'podman' }}
       run: |
         BUILDAH_LAYERS=true buildah bud \
-        --file image/${IMAGE_NAME}.Dockerfile \
+        --file image/${IMAGE_NAME}.Containerfile \
         --tag docker.io/${IMAGE_NAMESPACE}/${IMAGE_NAME}:${{ steps.variables.outputs.datetime }} \
         .
 
@@ -157,8 +157,8 @@ jobs:
         podman run \
           --rm \
           --name ${CONTAINER_NAME} \
-          --mount type=bind,source="$(pwd)/${INSTALL_DIR}",target=/home/steam/${INSTALL_DIR} \
-          --mount type=bind,source="$(pwd)/${CONFIG_DIR}",target=/home/steam/${CONFIG_DIR} \
+          --mount type=bind,source="$(pwd)/${INSTALL_DIR}",target=/usr/local/wineprefix/drive_c/Program Files/Steam/steamapps/common/${INSTALL_DIR} \
+          --mount type=bind,source="$(pwd)/${CONFIG_DIR}",target=/usr/local/wineprefix/drive_c/Program Files/Steam/steamapps/common/${CONFIG_DIR} \
           --env=GAME_PORT="25496" \
           --env=MAX_PLAYERS="14" \
           --env=MAX_RAM="6144m" \

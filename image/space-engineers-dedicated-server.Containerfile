@@ -33,6 +33,25 @@ ARG GO_IMAGE="${GO_IMAGE_PATH}:${GO_IMAGE_VERSION}"
 ARG INSTALL_DIR="/tmp/packages/"
 ARG WINEPREFIX="/usr/local/wineprefix/"
 
+FROM ${BASE_IMAGE} AS INSTALL_STEAM_DEPS
+ARG BASE_IMAGE_VERSION
+ARG INSTALL_DIR
+
+RUN dnf install --assumeyes --releasever ${BASE_IMAGE_VERSION} --installroot "${INSTALL_DIR}" \
+     glibc.i686 libstdc++.i686
+
+FROM ${BASE_IMAGE} AS INSTALL_STEAM
+ARG INSTALL_DIR
+
+WORKDIR ${INSTALL_DIR}
+
+RUN dnf install --assumeyes \
+      wget
+
+RUN wget "https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz" \
+    && tar -zxf steamcmd_linux.tar.gz \
+    && rm steamcmd_linux.tar.gz
+
 FROM ${BASE_IMAGE} AS INSTALL_WINE
 ARG BASE_IMAGE_VERSION
 ARG INSTALL_DIR
@@ -42,7 +61,7 @@ RUN dnf config-manager \
     --add-repo "https://dl.winehq.org/wine-builds/fedora/${BASE_IMAGE_VERSION}/winehq.repo"
 
 RUN dnf install --assumeyes --releasever ${BASE_IMAGE_VERSION} --installroot "${INSTALL_DIR}" \
-    filesystem bash winehq-stable
+    filesystem bash winehq-stable.x86_64
 
 FROM ${BASE_IMAGE} AS INSTALL_WINETRICKS
 ARG INSTALL_DIR
@@ -67,25 +86,6 @@ ENV WINEPREFIX="$WINEPREFIX"
 # Apply Winetricks
 RUN ./run_winetricks.sh
 
-FROM ${BASE_IMAGE} AS INSTALL_STEAM_DEPS
-ARG BASE_IMAGE_VERSION
-ARG INSTALL_DIR
-
-RUN dnf install --assumeyes --releasever ${BASE_IMAGE_VERSION} --installroot "${INSTALL_DIR}" \
-     glibc.i686 libstdc++.i686
-
-FROM ${BASE_IMAGE} AS INSTALL_STEAM
-ARG INSTALL_DIR
-
-WORKDIR ${INSTALL_DIR}
-
-RUN dnf install --assumeyes \
-      wget
-
-RUN wget "https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz" \
-    && tar -zxf steamcmd_linux.tar.gz \
-    && rm steamcmd_linux.tar.gz
-
 FROM ${GO_IMAGE} AS GO_BUILD
 ARG INSTALL_DIR
 
@@ -109,10 +109,10 @@ ENV PATH="$STEAM_DIR:$WINTRICKS_DIR:$PATH"
 ENV WINEARCH="win64"
 ENV WINEPREFIX="$WINEPREFIX"
 
-COPY --from=INSTALL_WINE       $INSTALL_DIR/       /
-COPY --from=INSTALL_WINETRICKS $WINEPREFIX/        ${WINEPREFIX}
 COPY --from=INSTALL_STEAM_DEPS $INSTALL_DIR/       /
 COPY --from=INSTALL_STEAM      $INSTALL_DIR/       ${STEAM_DIR}
+COPY --from=INSTALL_WINE       $INSTALL_DIR/       /
+COPY --from=INSTALL_WINETRICKS $WINEPREFIX/        ${WINEPREFIX}
 COPY --from=GO_BUILD           $INSTALL_DIR/build/ /usr/local/bin/
 
 COPY src/install_server.scmd /app/

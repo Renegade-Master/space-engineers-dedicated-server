@@ -57,6 +57,9 @@ Container:
 * [Podman](https://podman.io/docs/installation)
   or [Docker](https://docs.docker.com/engine/install/)
 
+* Optionally, the Compose variants of either [Podman](https://github.com/containers/podman-compose#podman-compose)
+  or [Docker](https://docs.docker.com/compose/install/)
+
 **_Note_**: Podman and Docker can be used interchangeably for this image. I will
 use Podman for the commands here, but they are the exact same for Docker. Simply
 substitute the word `docker` where I have `podman` if you would rather use
@@ -64,7 +67,7 @@ Docker and Docker-Compose.
 
 ## Instructions
 
-The server can be run using plain Docker, or using Docker-Compose. The
+The server can be run using plain `podman`, or using `podman-compose`. The
 end-result is the same, but Docker-Compose is recommended for ease of
 configuration.
 
@@ -106,7 +109,7 @@ The following are instructions for running the server using the image.
    podman volume create space-engineers-volume
 
    podman run --detach \
-       --volume space-engineers-volume:/home/steam/se_install/ \
+       --volume space-engineers-volume:/usr/local/wineprefix/drive_c/Program Files/Steam/steamapps/common/SpaceEngineers \
        --publish 27016:27016/udp \
        --name se-dedicated-server \
        [--env=NONE_YET_KNOWN=<value>] \
@@ -123,3 +126,11 @@ The following are instructions for running the server using the image.
 
 4. Once you see `<placeholder_initialisation_text>` in the console, people can
    start to join the server.
+
+## References
+
+### Links
+
+### Alternative Space Engineers Servers
+
+* [mmmaxwwwell/space-engineers-dedicated-docker-linux](https://github.com/mmmaxwwwell/space-engineers-dedicated-docker-linux)
