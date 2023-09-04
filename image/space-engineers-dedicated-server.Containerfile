@@ -1,5 +1,5 @@
 # Space Engineers Dedicated Server Docker Image.
-# Copyright (C) 2022-2023 Renegade-Master [renegade.master.dev@protonmail.com]
+# Copyright (C) 2022-2023 Renegade-Master [renegade@renegade-master.com]
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -38,7 +38,7 @@ ARG BASE_IMAGE_VERSION
 ARG INSTALL_DIR
 
 RUN dnf install --assumeyes --releasever ${BASE_IMAGE_VERSION} --installroot "${INSTALL_DIR}" \
-     glibc.i686 libstdc++.i686
+     glibc.i686 libstdc++.i686 xorg-x11-server-Xvfb
 
 FROM ${BASE_IMAGE} AS INSTALL_STEAM
 ARG INSTALL_DIR
@@ -75,13 +75,13 @@ RUN dnf install --assumeyes \
 RUN wget https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks \
     && chmod +x winetricks
 
-COPY --from=INSTALL_WINE $INSTALL_DIR/ /
+COPY --from=INSTALL_WINE ${INSTALL_DIR}/ /
 COPY src/run_winetricks.sh .
 
 ENV DISPLAY=":5.0"
 ENV WINEARCH="win64"
 ENV WINEDLLOVERRIDES="mscoree=d"
-ENV WINEPREFIX="$WINEPREFIX"
+ENV WINEPREFIX="${WINEPREFIX}"
 
 # Apply Winetricks
 RUN ./run_winetricks.sh
@@ -102,19 +102,19 @@ FROM scratch AS RUNTIME
 ARG INSTALL_DIR
 ARG WINEPREFIX
 
-ENV STEAM_DIR="/usr/local/games"
+ENV STEAM_DIR="/usr/local/games/steamcmd"
 ENV WINTRICKS_DIR="/usr/local/winetricks"
-ENV DISPLAY=":0"
-ENV PATH="$STEAM_DIR:$WINTRICKS_DIR:$PATH"
+ENV DISPLAY=":5.0"
+ENV PATH="${STEAM_DIR}:${WINTRICKS_DIR}:${PATH}"
 
 ENV WINEARCH="win64"
-ENV WINEPREFIX="$WINEPREFIX"
+ENV WINEPREFIX="${WINEPREFIX}"
 
-COPY --from=INSTALL_STEAM_DEPS $INSTALL_DIR/       /
-COPY --from=INSTALL_STEAM      $INSTALL_DIR/       ${STEAM_DIR}
-COPY --from=INSTALL_WINE       $INSTALL_DIR/       /
-COPY --from=INSTALL_WINETRICKS $WINEPREFIX/        ${WINEPREFIX}
-COPY --from=GO_BUILD           $INSTALL_DIR/build/ /usr/local/bin/
+COPY --from=INSTALL_STEAM_DEPS ${INSTALL_DIR}/       /
+COPY --from=INSTALL_STEAM      ${INSTALL_DIR}/       ${STEAM_DIR}
+COPY --from=INSTALL_WINE       ${INSTALL_DIR}/       /
+COPY --from=INSTALL_WINETRICKS ${WINEPREFIX}/        ${WINEPREFIX}
+COPY --from=GO_BUILD           ${INSTALL_DIR}/build/ /usr/local/bin/
 
 COPY src/install_server.scmd /app/
 

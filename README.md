@@ -95,7 +95,7 @@ The following are instructions for running the server using the image.
        git clone https://github.com/Renegade-Master/space-engineers-dedicated-server.git \
            && cd space-engineers-dedicated-server
 
-       buildah bud --tag docker.io/renegademaster/space-engineers-dedicated-server:<tag> \
+       [BUILDAH_LAYERS=true] buildah bud --tag docker.io/renegademaster/space-engineers-dedicated-server:<tag> \
            --file docker/space-engineers-dedicated-server.Containerfile .
        ```
 

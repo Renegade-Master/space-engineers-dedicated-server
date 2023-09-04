@@ -10,9 +10,9 @@ import (
 var log = logger.Default()
 
 const (
-	serverExe        = "/usr/local/wineprefix/drive_c/Program Files/Steam/SpaceEngineers/DedicatedServer64/SpaceEngineersDedicated.exe"
-	serverExePath    = "C:\\Program Files\\Steam\\steamapps\\common\\SpaceEngineers\\DedicatedServer64"
-	steamcmd         = "/usr/local/games/steamcmd.sh"
+	serverExe        = "/usr/local/games/Steam/steamapps/common/SpaceEngineers/DedicatedServer64/SpaceEngineersDedicated.exe"
+	serverExePath    = "Z:\\usr\\local\\games\\Steam\\steamapps\\common\\SpaceEngineers\\DedicatedServer64"
+	steamcmd         = "/usr/local/games/steamcmd/steamcmd.sh"
 	steamcmdFile     = "/app/install_server.scmd"
 	displaySelection = ":5"
 	screenSelection  = "0"
