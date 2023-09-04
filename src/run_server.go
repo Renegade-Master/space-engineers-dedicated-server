@@ -7,11 +7,12 @@ import (
 )
 
 func startServer() {
+	_ = os.Setenv("DISPLAY", ":0.0")
 	_ = os.Setenv("WINEDEBUG", "-all")
 
 	wineExecPath := fmt.Sprintf("-path %s", serverExePath)
 
-	serverCmd := exec.Command("wine", serverExe, wineExecPath)
+	serverCmd := exec.Command("wineconsole", serverExe, wineExecPath)
 	serverCmd.Stdout = log.Writer()
 
 	_ = startExecutable(serverCmd)
@@ -30,6 +31,15 @@ func applyPreinstallConfig() {
 	filepath := steamcmdFile
 
 	replaceTextInFile(filepath, "-beta GAME_VERSION", "-beta public")
+
+	// Create headless window
+	//screenFlag := fmt.Sprintf("-screen %s", screenSelection)
+	//resolution := "1024x768x16"
+	//
+	//displayCmd := exec.Command("Xvfb", displaySelection, screenFlag, resolution)
+	//displayCmd.Stdout = log.Writer()
+	//
+	//go func() { _ = startExecutable(displayCmd) }()
 }
 
 // main executes the process of starting the Dedicated Server

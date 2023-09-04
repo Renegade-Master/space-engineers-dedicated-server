@@ -12,7 +12,7 @@
 @NoPromptForPassword 1
 
 // Set the game installation directory
-force_install_dir "/usr/local/wineprefix/drive_c/Program Files/Steam/steamapps/common/SpaceEngineers"
+force_install_dir "/usr/local/wineprefix/drive_c/Program Files/Steam/"
 
 login anonymous
 
