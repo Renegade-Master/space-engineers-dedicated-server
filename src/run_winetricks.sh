@@ -1,4 +1,6 @@
-# SteamCMD Dedicated Server Template Docker Image.
+#!/usr/bin/env bash
+
+# Space Engineers Dedicated Server Docker Image.
 # Copyright (C) 2022-2022 Renegade-Master [renegade.master.dev@protonmail.com]
 #
 # This program is free software: you can redistribute it and/or modify
@@ -17,23 +19,20 @@
 
 #######################################################################
 #   Author: Renegade-Master
-#   Description: Base image for running a Generic SteamCMD Dedicated
-#       Server instance.
+#   Description: Install, update, and start a Space Engineers Dedicated
+#     Server instance.
 #   License: GNU General Public License v3.0 (see LICENSE)
 #######################################################################
 
-# Base Image
-ARG BASE_IMAGE="docker.io/renegademaster/steamcmd-minimal:1.1.2"
+# Set to `-x` for Debug logging
+set +x -u -o pipefail
 
-FROM ${BASE_IMAGE}
+# Apply Winetricks
+Xvfb :5 -screen 0 1024x768x16 &
 
-# Add metadata labels
-LABEL com.renegademaster.steamcmd-dedicated-server-template.authors="Renegade-Master" \
-    com.renegademaster.steamcmd-dedicated-server-template.source-repository="https://github.com/Renegade-Master/steamcmd-dedicated-server-template" \
-    com.renegademaster.steamcmd-dedicated-server-template.image-repository="https://hub.docker.com/renegademaster/steamcmd-dedicated-server-template"
+wineboot --init /nogui
 
-# Copy the source files
-COPY src /home/steam/
-
-# Run the setup script
-ENTRYPOINT ["/bin/bash", "/home/steam/run_server.sh"]
+./winetricks corefonts
+./winetricks -q vcrun2019
+./winetricks -q --force dotnet48
+./winetricks sound=disabled

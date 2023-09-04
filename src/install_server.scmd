@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // Author: Renegade-Master
-// Description: SteamCMD installation script for Generic SteamCMD
+// Description: SteamCMD installation script for Space Engineers
 //   Dedicated Server
 // License: GNU General Public License v3.0 (see LICENSE)
 ///////////////////////////////////////////////////////////////////////
@@ -12,11 +12,11 @@
 @NoPromptForPassword 1
 
 // Set the game installation directory
-force_install_dir /home/steam/REPLACE_ME_INSTALL
+force_install_dir "/usr/local/games/Steam/"
 
 login anonymous
 
-// Install/Update the Generic SteamCMD Dedicated Server
-app_update 000000 -beta GAME_VERSION validate
+// Install/Update the Space Engineers Dedicated Server
+app_update 298740 -beta GAME_VERSION validate
 
 quit

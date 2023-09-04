@@ -1,4 +1,4 @@
-# SteamCMD Dedicated Server Template Docker Image.
+# Space Engineers Dedicated Server Docker Image.
 # Copyright (C) 2022-2022 Renegade-Master [renegade.master.dev@protonmail.com]
 #
 # This program is free software: you can redistribute it and/or modify
@@ -17,11 +17,12 @@
 
 name: Build and Test Server Image
 
-#on:
-#  push:
-#    branches: [ main ]
-#  pull_request:
-#    branches: [ main ]
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 defaults:
   run:
@@ -30,9 +31,9 @@ defaults:
 # Set some Environment Variables for image specific properties
 env:
   IMAGE_NAMESPACE: renegademaster
-  IMAGE_NAME: steamcmd-dedicated-server-template
-  CONTAINER_NAME: dedicated-server
-  INSTALL_DIR: REPLACE_ME_INSTALL
+  IMAGE_NAME: space-engineers-dedicated-server
+  CONTAINER_NAME: se-dedicated-server
+  INSTALL_DIR: SpaceEngineers
   CONFIG_DIR: REPLACE_ME_CONFIG
 
 jobs:
@@ -66,7 +67,7 @@ jobs:
       if: ${{ success() && matrix.system == 'docker' }}
       run: |
         docker build \
-        --file docker/${IMAGE_NAME}.Dockerfile \
+        --file image/${IMAGE_NAME}.Containerfile \
         --tag docker.io/${IMAGE_NAMESPACE}/${IMAGE_NAME}:${{ steps.variables.outputs.datetime }} \
         .
 
@@ -84,8 +85,8 @@ jobs:
         docker run \
           --rm \
           --name ${CONTAINER_NAME} \
-          --mount type=bind,source="$(pwd)/${INSTALL_DIR}",target=/home/steam/${INSTALL_DIR} \
-          --mount type=bind,source="$(pwd)/${CONFIG_DIR}",target=/home/steam/${CONFIG_DIR} \
+          --mount type=bind,source="$(pwd)/${INSTALL_DIR}",target=/usr/local/wineprefix/drive_c/Program Files/Steam/steamapps/common/${INSTALL_DIR} \
+          --mount type=bind,source="$(pwd)/${CONFIG_DIR}",target=/usr/local/wineprefix/drive_c/Program Files/Steam/steamapps/common/${CONFIG_DIR} \
           --env=GAME_PORT="25496" \
           --env=MAX_PLAYERS="14" \
           --env=MAX_RAM="6144m" \
@@ -98,38 +99,38 @@ jobs:
     ###############################
     # Docker-Compose Build System #
     ###############################
-    - name: Update Docker-Compose File
-      if: ${{ success() && matrix.system == 'docker-compose' }}
-      run: |
-        sed -i "s/GAME_PORT=.*\"/GAME_PORT=25496\"/g" "./docker-compose.yaml"
-        sed -i "s/MAX_PLAYERS=.*\"/MAX_PLAYERS=14\"/g" "./docker-compose.yaml"
-        sed -i "s/MAX_RAM=.*m\"/MAX_RAM=6144m\"/g" "./docker-compose.yaml"
-        sed -i "s/PUBLIC_SERVER=.*/PUBLIC_SERVER=false\"/g" "./docker-compose.yaml"
-        sed -i "s/RCON_PASSWORD=.*/RCON_PASSWORD=github_action_test_rcon_password\"/g" "./docker-compose.yaml"
-        sed -i "s/RCON_PORT=.*\"/RCON_PORT=27025\"/g" "./docker-compose.yaml"
-        sed -i "s/SERVER_NAME=.*/SERVER_NAME=GitHubActionTest\"/g" "./docker-compose.yaml"
-        sed -i "s/SERVER_PASSWORD=.*/SERVER_PASSWORD=github_action_test_password\"/g" "./docker-compose.yaml"
+    #- name: Update Docker-Compose File
+    #  if: ${{ success() && matrix.system == 'docker-compose' }}
+    #  run: |
+    #    sed -i "s/GAME_PORT=.*\"/GAME_PORT=25496\"/g" "./docker-compose.yaml"
+    #    sed -i "s/MAX_PLAYERS=.*\"/MAX_PLAYERS=14\"/g" "./docker-compose.yaml"
+    #    sed -i "s/MAX_RAM=.*m\"/MAX_RAM=6144m\"/g" "./docker-compose.yaml"
+    #    sed -i "s/PUBLIC_SERVER=.*/PUBLIC_SERVER=false\"/g" "./docker-compose.yaml"
+    #    sed -i "s/RCON_PASSWORD=.*/RCON_PASSWORD=github_action_test_rcon_password\"/g" "./docker-compose.yaml"
+    #    sed -i "s/RCON_PORT=.*\"/RCON_PORT=27025\"/g" "./docker-compose.yaml"
+    #    sed -i "s/SERVER_NAME=.*/SERVER_NAME=GitHubActionTest\"/g" "./docker-compose.yaml"
+    #    sed -i "s/SERVER_PASSWORD=.*/SERVER_PASSWORD=github_action_test_password\"/g" "./docker-compose.yaml"
 
-        cat docker-compose.yaml
+    #    cat docker-compose.yaml
 
-    - name: Build the Docker-Compose Image
-      if: ${{ success() && matrix.system == 'docker-compose' }}
-      run: |
-        docker-compose build
+    #- name: Build the Docker-Compose Image
+    #  if: ${{ success() && matrix.system == 'docker-compose' }}
+    #  run: |
+    #    docker-compose build
 
-    - name: Test Run the Docker-Compose Image
-      if: ${{ success() && matrix.system == 'docker-compose' }}
-      continue-on-error: true
-      timeout-minutes: 5
-      run: |
-        # Start a timed shutdown signal
-        (sleep 330 && docker exec \
-          ${IMAGE_NAME} bash -c \
-            "rcon -a $(cat ${CONFIG_DIR}/ip.txt):\${RCON_PORT} -p \${RCON_PASSWORD} quit") &
-        
-        # Run the Docker-Compose Image
-        docker-compose up \
-          2>&1 | tee ./docker-log.log
+    #- name: Test Run the Docker-Compose Image
+    #  if: ${{ success() && matrix.system == 'docker-compose' }}
+    #  continue-on-error: true
+    #  timeout-minutes: 5
+    #  run: |
+    #    # Start a timed shutdown signal
+    #    (sleep 330 && docker exec \
+    #      ${IMAGE_NAME} bash -c \
+    #        "rcon -a $(cat ${CONFIG_DIR}/ip.txt):\${RCON_PORT} -p \${RCON_PASSWORD} quit") &
+    #
+    #    # Run the Docker-Compose Image
+    #    docker-compose up \
+    #      2>&1 | tee ./docker-log.log
 
     #######################
     # Podman Build System #
@@ -138,7 +139,7 @@ jobs:
       if: ${{ success() && matrix.system == 'podman' }}
       run: |
         BUILDAH_LAYERS=true buildah bud \
-        --file docker/${IMAGE_NAME}.Dockerfile \
+        --file image/${IMAGE_NAME}.Containerfile \
         --tag docker.io/${IMAGE_NAMESPACE}/${IMAGE_NAME}:${{ steps.variables.outputs.datetime }} \
         .
 
@@ -156,8 +157,8 @@ jobs:
         podman run \
           --rm \
           --name ${CONTAINER_NAME} \
-          --mount type=bind,source="$(pwd)/${INSTALL_DIR}",target=/home/steam/${INSTALL_DIR} \
-          --mount type=bind,source="$(pwd)/${CONFIG_DIR}",target=/home/steam/${CONFIG_DIR} \
+          --mount type=bind,source="$(pwd)/${INSTALL_DIR}",target=/usr/local/wineprefix/drive_c/Program Files/Steam/steamapps/common/${INSTALL_DIR} \
+          --mount type=bind,source="$(pwd)/${CONFIG_DIR}",target=/usr/local/wineprefix/drive_c/Program Files/Steam/steamapps/common/${CONFIG_DIR} \
           --env=GAME_PORT="25496" \
           --env=MAX_PLAYERS="14" \
           --env=MAX_RAM="6144m" \
